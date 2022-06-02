@@ -1,4 +1,4 @@
-package api;
+package emilia.api;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

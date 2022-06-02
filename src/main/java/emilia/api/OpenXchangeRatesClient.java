@@ -1,6 +1,6 @@
-package api;
+package emilia.api;
 
-import model.CurrencyRates;
+import emilia.model.CurrencyRates;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

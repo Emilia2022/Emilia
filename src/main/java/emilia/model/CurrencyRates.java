@@ -1,4 +1,4 @@
-package model;
+package emilia.model;
 
 import java.util.Map;
 
