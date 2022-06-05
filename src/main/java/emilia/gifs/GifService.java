@@ -1,5 +1,6 @@
 package emilia.gifs;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,12 +13,15 @@ public class GifService {
 
     private final GiphyClient giphyClient;
 
+    @Autowired
     public GifService(GiphyClient giphyClient) {
         this.giphyClient = giphyClient;
     }
 
-    public ResponseEntity<String> getRandomGif(String tag) {
-        return giphyClient.getGif(apiKey, tag);
+    public ResponseEntity<String> search(
+            String query,
+            int offset) {
+        return giphyClient.getGif(apiKey, query, offset);
     }
 
 }

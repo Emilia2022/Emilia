@@ -11,9 +11,8 @@ import java.util.*;
 @Service
 public class CurrencyRatesService {
 
-    private final OpenXchangeRatesClient xchangeRatesClient;
+    private final OpenXchangeRatesClient client;
     private final SimpleDateFormat dateFormatter;
-    private final SimpleDateFormat timeFormatter;
     @Value("${oxr.app.id}")
     private String appId;
     @Value("${oxr.base}")
@@ -25,12 +24,10 @@ public class CurrencyRatesService {
 
     @Autowired
     public CurrencyRatesService(
-            OpenXchangeRatesClient xchangeRatesClient,
-            @Qualifier("date_formatter") SimpleDateFormat dateFormat,
-            @Qualifier("time_formatter") SimpleDateFormat timeFormat) {
-        this.xchangeRatesClient = xchangeRatesClient;
+            OpenXchangeRatesClient client,
+            @Qualifier("date_formatter") SimpleDateFormat dateFormat) {
+        this.client = client;
         this.dateFormatter = dateFormat;
-        this.timeFormatter = timeFormat;
     }
 
     public void checkRates() {
@@ -44,29 +41,45 @@ public class CurrencyRatesService {
 
     public List<String> getAllTickers() {
         List<String> tickers = null;
-        Map<String, Double> rates = currentRates.getExchangeRates();
+        Map<String, Double> rates = currentRates.getRates();
         if (rates != null) {
             tickers = new ArrayList<>(rates.keySet());
         }
         return tickers;
     }
 
+    public RateChange compareBaseAgainst(String ticker) {
+        Double current = currentRates.getRates().get(ticker);
+        Double old = yesterdaysRates.getRates().get(ticker);
+        if (current == null || old == null) return RateChange.UNCHANGED;
+        int result = Double.compare(current, old);
+        switch (result) {
+            case -1:
+                return RateChange.FALLEN;
+            case 0:
+                return RateChange.UNCHANGED;
+            case 1:
+                return RateChange.GROWN;
+        }
+        return RateChange.UNCHANGED;
+    }
+
     private CurrencyRates recalculateRatesWithNewBase(CurrencyRates original) {
         Map<String, Double> newRates = new HashMap<>();
-        Map<String, Double> rates = original.getExchangeRates();
+        Map<String, Double> rates = original.getRates();
         Double ourBaseRate = rates.get(baseTicker);
-        original.getExchangeRates().forEach((ticker, value) -> newRates.put(ticker, ourBaseRate / value));
+        original.getRates().forEach((ticker, value) -> newRates.put(ticker, ourBaseRate / value));
         CurrencyRates newCurrencyRates = new CurrencyRates();
         newCurrencyRates.setBase(baseTicker);
-        newCurrencyRates.setExchangeRates(newRates);
+        newCurrencyRates.setRates(newRates);
         newCurrencyRates.setTimestamp(original.getTimestamp());
         return newCurrencyRates;
     }
 
     private void refreshRates() {
-        currentRates = xchangeRatesClient.getCurrentRates(appId);
+        currentRates = client.getCurrentRates(appId);
         String dateString = getDateStringForRatesRequest();
-        yesterdaysRates = xchangeRatesClient.getRatesHistory(dateString, appId);
+        yesterdaysRates = client.getRatesHistory(dateString, appId);
         ratesRefreshTS = System.currentTimeMillis();
     }
 

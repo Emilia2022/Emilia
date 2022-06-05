@@ -21,7 +21,7 @@ public class CurrencyRates {
 
     private Integer timestamp;
     private String base;
-    private Map<String, Double> exchangeRates;
+    private Map<String, Double> rates;
 
     public CurrencyRates() {
     }
@@ -42,11 +42,11 @@ public class CurrencyRates {
         this.base = base;
     }
 
-    public Map<String, Double> getExchangeRates() {
-        return exchangeRates;
+    public Map<String, Double> getRates() {
+        return rates;
     }
 
-    public void setExchangeRates(Map<String, Double> exchangeRates) {
-        this.exchangeRates = exchangeRates;
+    public void setRates(Map<String, Double> rates) {
+        this.rates = rates;
     }
 }

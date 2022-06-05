@@ -1,4 +1,4 @@
-package emilia.main;
+package emilia.control;
 
 import emilia.currency.CurrencyRatesService;
 import org.springframework.beans.factory.annotation.Autowired;
