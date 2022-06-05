@@ -1,5 +1,9 @@
-package emilia.currency;
+package emilia.currency.services;
 
+import emilia.currency.CurrencyCalculator;
+import emilia.currency.CurrencyRates;
+import emilia.currency.OpenXchangeRatesClient;
+import emilia.currency.RateChange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,38 +12,46 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static emilia.di.AppConfig.CURRENCY_CALCULATOR;
+import static emilia.di.AppConfig.DATE_FORMATTER;
+
 @Service
-public class CurrencyRatesService {
+public class CurrencyServiceImpl implements CurrencyService {
 
     private final OpenXchangeRatesClient client;
     private final SimpleDateFormat dateFormatter;
+    private final CurrencyCalculator calculator;
+
     @Value("${oxr.app.id}")
     private String appId;
-    @Value("${oxr.base}")
-    private String baseTicker;
+
     private long ratesRefreshTS = 0L;
 
     private CurrencyRates currentRates = null;
     private CurrencyRates yesterdaysRates = null;
 
     @Autowired
-    public CurrencyRatesService(
+    public CurrencyServiceImpl(
             OpenXchangeRatesClient client,
-            @Qualifier("date_formatter") SimpleDateFormat dateFormat) {
+            @Qualifier(CURRENCY_CALCULATOR) CurrencyCalculator calculator,
+            @Qualifier(DATE_FORMATTER) SimpleDateFormat dateFormat) {
         this.client = client;
+        this.calculator = calculator;
         this.dateFormatter = dateFormat;
     }
 
+    @Override
     public void checkRates() {
-        if (!isRatesRefreshNeeded()) return;
-        refreshRates();
+        refreshRatesIfNeeded();
         if (yesterdaysRates != null)
-            yesterdaysRates = recalculateRatesWithNewBase(yesterdaysRates);
+            yesterdaysRates = calculator.recalculateAgainstCustomBase(yesterdaysRates);
         if (currentRates != null)
-            currentRates = recalculateRatesWithNewBase(currentRates);
+            currentRates = calculator.recalculateAgainstCustomBase(currentRates);
     }
 
+    @Override
     public List<String> getAllTickers() {
+        refreshRatesIfNeeded();
         List<String> tickers = null;
         Map<String, Double> rates = currentRates.getRates();
         if (rates != null) {
@@ -48,35 +60,14 @@ public class CurrencyRatesService {
         return tickers;
     }
 
-    public RateChange compareBaseAgainst(String ticker) {
-        Double current = currentRates.getRates().get(ticker);
-        Double old = yesterdaysRates.getRates().get(ticker);
-        if (current == null || old == null) return RateChange.UNCHANGED;
-        int result = Double.compare(current, old);
-        switch (result) {
-            case -1:
-                return RateChange.FALLEN;
-            case 0:
-                return RateChange.UNCHANGED;
-            case 1:
-                return RateChange.GROWN;
-        }
-        return RateChange.UNCHANGED;
+    @Override
+    public RateChange evaluateAgainstBase(String ticker) {
+        refreshRatesIfNeeded();
+        return calculator.determineChange(ticker, currentRates, yesterdaysRates);
     }
 
-    private CurrencyRates recalculateRatesWithNewBase(CurrencyRates original) {
-        Map<String, Double> newRates = new HashMap<>();
-        Map<String, Double> rates = original.getRates();
-        Double ourBaseRate = rates.get(baseTicker);
-        original.getRates().forEach((ticker, value) -> newRates.put(ticker, ourBaseRate / value));
-        CurrencyRates newCurrencyRates = new CurrencyRates();
-        newCurrencyRates.setBase(baseTicker);
-        newCurrencyRates.setRates(newRates);
-        newCurrencyRates.setTimestamp(original.getTimestamp());
-        return newCurrencyRates;
-    }
-
-    private void refreshRates() {
+    private void refreshRatesIfNeeded() {
+        if (!isRatesRefreshNeeded()) return;
         currentRates = client.getCurrentRates(appId);
         String dateString = getDateStringForRatesRequest();
         yesterdaysRates = client.getRatesHistory(dateString, appId);

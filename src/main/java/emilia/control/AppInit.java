@@ -1,18 +1,18 @@
 package emilia.control;
 
-import emilia.currency.CurrencyRatesService;
+import emilia.currency.services.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
 @Component
-public class Init {
+public class AppInit {
 
-    private final CurrencyRatesService service;
+    private final CurrencyService service;
 
     @Autowired
-    public Init(CurrencyRatesService service) {
+    public AppInit(CurrencyService service) {
         this.service = service;
     }
 

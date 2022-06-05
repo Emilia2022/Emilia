@@ -1,0 +1,33 @@
+package emilia.di;
+
+import emilia.gifs.SearchQueryProvider;
+import emilia.currency.CurrencyCalculator;
+import emilia.currency.services.CurrencyService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.text.SimpleDateFormat;
+
+@Configuration
+public class AppConfig {
+
+    public static final String DATE_FORMATTER = "date_formatter";
+    public static final String SEARCH_QUERY_PROVIDER = "search_query_provider";
+    public static final String CURRENCY_CALCULATOR = "currency_calculator";
+
+    @Bean(DATE_FORMATTER)
+    public SimpleDateFormat dateFormatter() {
+        return new SimpleDateFormat("yyyy-MM-dd");
+    }
+
+    @Bean(SEARCH_QUERY_PROVIDER)
+    public SearchQueryProvider searchQueryProvider(CurrencyService currencyService){
+        return new SearchQueryProvider(currencyService);
+    }
+
+    @Bean(CURRENCY_CALCULATOR)
+    public CurrencyCalculator currencyCalculator(){
+        return new CurrencyCalculator();
+    }
+
+}

@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "OXRClient", url = "${oxr.url.base}")
 public interface OpenXchangeRatesClient {
 
-    @GetMapping("/latest.json")
+    @GetMapping("latest.json")
     CurrencyRates getCurrentRates(@RequestParam("app_id") String appId);
 
-    @GetMapping("/historical/{date}.json")
+    @GetMapping("historical/{date}.json")
     CurrencyRates getRatesHistory(
             @PathVariable String date,
             @RequestParam("app_id") String appId
