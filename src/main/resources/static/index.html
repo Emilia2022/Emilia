@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ruble 2 Gif - the fun tool to make (or ruin!) your day</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="./proxy.js"></script>
+</head>
+<body>
+
+
+<div class="row" style="margin-left: 50px">
+
+    <div class="input-field" style="margin-top: 50px; width: 300px">
+        <select id="tickers-select">
+        </select>
+        <label>Валюта</label>
+    </div>
+
+</div>
+
+<div class="row" style="margin-left: 50px">
+
+    <h5>Выберите тикер валюты, а пока ждём-с...</h5>
+
+    <img src="waiting.gif" id="gif" class="center-align">
+
+</div>
+
+
+<script>
+
+$(document).ready(function(){
+    $('select').formSelect();
+  });
+
+$(getTickers());
+
+
+</script>
+
+</body>
+</html>
