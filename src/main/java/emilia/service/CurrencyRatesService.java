@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 @Service
 public class CurrencyRatesService {
@@ -37,21 +36,40 @@ public class CurrencyRatesService {
     }
 
     public void checkRates() {
-        if(isRatesRefreshNeeded()){
-            refreshRates();
-        }
-        processRates();
+        if (!isRatesRefreshNeeded()) return;
+        refreshRates();
+        if (yesterdaysRates != null)
+            yesterdaysRates = recalculateRatesWithNewBase(yesterdaysRates);
+        if (currentRates != null)
+            currentRates = recalculateRatesWithNewBase(currentRates);
     }
 
-    private void refreshRates(){
+    public List<String> getAllTickers() {
+        List<String> tickers = null;
+        Map<String, Double> rates = currentRates.getRates();
+        if (rates != null) {
+            tickers = new ArrayList<>(rates.keySet());
+        }
+        return tickers;
+    }
+
+    private CurrencyRates recalculateRatesWithNewBase(CurrencyRates original) {
+        Map<String, Double> newRates = new HashMap<>();
+        Map<String, Double> rates = original.getRates();
+        Double ourBaseRate = rates.get(baseTicker);
+        original.getRates().forEach((ticker, value) -> newRates.put(ticker, ourBaseRate / value));
+        CurrencyRates newCurrencyRates = new CurrencyRates();
+        newCurrencyRates.setBase(baseTicker);
+        newCurrencyRates.setRates(newRates);
+        newCurrencyRates.setTimestamp(original.getTimestamp());
+        return newCurrencyRates;
+    }
+
+    private void refreshRates() {
         currentRates = xchangeRatesClient.getCurrentRates(appId);
         String dateString = getDateStringForRatesRequest();
         yesterdaysRates = xchangeRatesClient.getRatesHistory(dateString, appId);
         ratesRefreshTS = System.currentTimeMillis();
-    }
-
-    private void processRates(){
-
     }
 
     private String getDateStringForRatesRequest() {
