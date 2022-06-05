@@ -1,6 +1,6 @@
-package emilia;
+package emilia.main;
 
-import emilia.service.CurrencyRatesService;
+import emilia.currency.CurrencyRatesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

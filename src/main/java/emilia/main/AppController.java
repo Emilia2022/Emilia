@@ -1,7 +1,7 @@
-package emilia.control;
+package emilia.main;
 
-import emilia.service.CurrencyRatesService;
-import emilia.service.GifService;
+import emilia.currency.CurrencyRatesService;
+import emilia.gifs.GifService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,6 +1,5 @@
-package emilia.service;
+package emilia.gifs;
 
-import emilia.api.GiphyClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

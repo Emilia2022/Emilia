@@ -1,7 +1,5 @@
-package emilia.service;
+package emilia.currency;
 
-import emilia.api.OpenXchangeRatesClient;
-import emilia.model.CurrencyRates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +44,7 @@ public class CurrencyRatesService {
 
     public List<String> getAllTickers() {
         List<String> tickers = null;
-        Map<String, Double> rates = currentRates.getRates();
+        Map<String, Double> rates = currentRates.getExchangeRates();
         if (rates != null) {
             tickers = new ArrayList<>(rates.keySet());
         }
@@ -55,12 +53,12 @@ public class CurrencyRatesService {
 
     private CurrencyRates recalculateRatesWithNewBase(CurrencyRates original) {
         Map<String, Double> newRates = new HashMap<>();
-        Map<String, Double> rates = original.getRates();
+        Map<String, Double> rates = original.getExchangeRates();
         Double ourBaseRate = rates.get(baseTicker);
-        original.getRates().forEach((ticker, value) -> newRates.put(ticker, ourBaseRate / value));
+        original.getExchangeRates().forEach((ticker, value) -> newRates.put(ticker, ourBaseRate / value));
         CurrencyRates newCurrencyRates = new CurrencyRates();
         newCurrencyRates.setBase(baseTicker);
-        newCurrencyRates.setRates(newRates);
+        newCurrencyRates.setExchangeRates(newRates);
         newCurrencyRates.setTimestamp(original.getTimestamp());
         return newCurrencyRates;
     }

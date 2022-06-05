@@ -1,4 +1,4 @@
-package emilia.model;
+package emilia.currency;
 
 import java.util.Map;
 
@@ -21,7 +21,7 @@ public class CurrencyRates {
 
     private Integer timestamp;
     private String base;
-    private Map<String, Double> rates;
+    private Map<String, Double> exchangeRates;
 
     public CurrencyRates() {
     }
@@ -42,11 +42,11 @@ public class CurrencyRates {
         this.base = base;
     }
 
-    public Map<String, Double> getRates() {
-        return rates;
+    public Map<String, Double> getExchangeRates() {
+        return exchangeRates;
     }
 
-    public void setRates(Map<String, Double> rates) {
-        this.rates = rates;
+    public void setExchangeRates(Map<String, Double> exchangeRates) {
+        this.exchangeRates = exchangeRates;
     }
 }

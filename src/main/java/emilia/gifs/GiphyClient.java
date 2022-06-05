@@ -1,4 +1,4 @@
-package emilia.api;
+package emilia.gifs;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
