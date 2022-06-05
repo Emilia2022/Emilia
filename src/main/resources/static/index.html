@@ -23,7 +23,7 @@
 
 <div class="row" style="margin-left: 50px">
 
-    <h5>Выберите тикер валюты, а пока ждём-с...</h5>
+    <h5 id="waiting-hint">Выберите тикер валюты, а пока ждём-с...</h5>
 
     <img src="waiting.gif" id="gif" class="center-align">
 
@@ -33,11 +33,12 @@
 <script>
 
 $(document).ready(function(){
-    $('select').formSelect();
+    $(getTickers());
+    let select = $('#tickers-select');
+    select.on('change', function() {
+      $(getGif(select.val()));
+    });
   });
-
-$(getTickers());
-
 
 </script>
 

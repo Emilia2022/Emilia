@@ -12,6 +12,19 @@ function getTickers() {
                       text : tickers[i]
                   }));
             }
+            $('select').formSelect();
+        }
+    })
+}
+
+function getGif(ticker) {
+    $.ajax({
+        url: URL + '/gif?ticker=' + ticker,
+        method: 'GET',
+        complete: function (data) {
+           let json = JSON.parse(data.responseText);
+           let url = json.data.images.original.url;
+           $('#gif').attr("src", url);
         }
     })
 }
