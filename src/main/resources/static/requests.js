@@ -17,7 +17,7 @@ function getTickers() {
     })
 }
 
-let urls = [];
+let cachedGifs = [];
 var offset = 0;
 
 function getGif(ticker) {
@@ -27,16 +27,20 @@ function getGif(ticker) {
         complete: function(data) {
             let json = JSON.parse(data.responseText);
             offset = json.pagination.offset + 1;
-            console.log(json);
             let gifs = json.data;
             for (i in gifs) {
-                let url = gifs[i].images.original.url;
-                if (urls.indexOf(url) == -1) {
-                    urls.push(url);
+                let obj = {};
+                let gif = gifs[i];
+                obj.url = gif.images.original.url;
+                obj.title = gif.title;
+                if (cachedGifs.indexOf(obj) == -1) {
+                    cachedGifs.push(obj);
                 }
             }
-            let url = urls[Math.floor(Math.random() * urls.length)];
-            $('#gif').attr("src", url);
+            let random = cachedGifs[Math.floor(Math.random() * cachedGifs.length)];
+            $('#gif').attr("src", random.url);
+            $('#title').text(random.title);
+            $('#info').text('Search query: ' + '"' + json.query + '"');
         }
     })
 }
