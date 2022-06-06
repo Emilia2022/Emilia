@@ -42,7 +42,7 @@ public class CurrencyServiceImplTest implements WithAssertions {
     }
 
     @Test
-    public void whenNoRatesAreAvailableThenShouldRefresh() {
+    public void whenNoRatesAreAvailableThenRefresh() {
         // when
         tested.checkRates();
         // then
@@ -51,7 +51,7 @@ public class CurrencyServiceImplTest implements WithAssertions {
     }
 
     @Test
-    public void whenRatesAreExpiredThenShouldRefresh() {
+    public void whenRatesAreExpiredThenRefresh() {
 
         // given
         long twoHoursAgo = System.currentTimeMillis() - 2 * 3600;
@@ -67,7 +67,7 @@ public class CurrencyServiceImplTest implements WithAssertions {
     }
 
     @Test
-    public void whenRatesAreUpToDateThenShouldNotRefresh() {
+    public void whenRatesAreUpToDateThenNotRefresh() {
 
         // given
         long now = System.currentTimeMillis();

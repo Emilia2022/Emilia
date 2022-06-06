@@ -34,7 +34,7 @@ public class CurrencyCalculatorTest implements WithAssertions {
     }
 
     @Test
-    public void givenThatCurrencyGainedAgainstBaseShouldReturnGROWN() {
+    public void whenCurrencyGainedAgainstBaseThenReturn_GROWN() {
         // given
         final double USDvsEUR = 0.9;
         final double USDvsRUB = 90.0;
@@ -52,7 +52,7 @@ public class CurrencyCalculatorTest implements WithAssertions {
     }
 
     @Test
-    public void givenThatCurrencyFellAgainstBaseShouldReturnFALLLEN() {
+    public void whenCurrencyFellAgainstBaseThenReturn_FALLLEN() {
         // given
         final double USDvsEUR = 0.9;
         final double USDvsRUB = 75.0;
@@ -70,7 +70,7 @@ public class CurrencyCalculatorTest implements WithAssertions {
     }
 
     @Test
-    public void givenThatCurrencyRemainedStableAgainstBaseShouldReturnUNCHANGED() {
+    public void whenCurrencyRemainedStableAgainstBaseThenReturn_UNCHANGED() {
         // given
         final double USDvsEUR = 0.9;
         final double USDvsRUB = 90.0;
