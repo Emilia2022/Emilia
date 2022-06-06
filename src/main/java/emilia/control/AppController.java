@@ -3,6 +3,7 @@ package emilia.control;
 import emilia.currency.services.CurrencyService;
 import emilia.currency.services.CurrencyServiceImpl;
 import emilia.gifs.GifService;
+import emilia.gifs.GifServiceImpl;
 import emilia.gifs.SearchQueryProvider;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class AppController {
     public AppController(
             CurrencyServiceImpl currencyRatesService,
             @Qualifier(SEARCH_QUERY_PROVIDER) SearchQueryProvider searchQueryProvider,
-            GifService gifService) {
+            GifServiceImpl gifService) {
         this.currencyService = currencyRatesService;
         this.gifService = gifService;
         this.searchQueryProvider = searchQueryProvider;
