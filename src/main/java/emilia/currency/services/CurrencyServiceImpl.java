@@ -21,11 +21,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     private final OpenXchangeRatesClient client;
     private final SimpleDateFormat dateFormatter;
     private final CurrencyCalculator calculator;
-
-    @Value("${oxr.app.id}")
-    private String appId;
-
-    private long ratesRefreshTS = 0L;
+    private final String appId;
 
     private CurrencyRates currentRates = null;
     private CurrencyRates yesterdaysRates = null;
@@ -34,10 +30,12 @@ public class CurrencyServiceImpl implements CurrencyService {
     public CurrencyServiceImpl(
             OpenXchangeRatesClient client,
             @Qualifier(CURRENCY_CALCULATOR) CurrencyCalculator calculator,
-            @Qualifier(DATE_FORMATTER) SimpleDateFormat dateFormat) {
+            @Qualifier(DATE_FORMATTER) SimpleDateFormat dateFormat,
+            @Value("${oxr.app.id}") String appId) {
         this.client = client;
         this.calculator = calculator;
         this.dateFormatter = dateFormat;
+        this.appId = appId;
     }
 
     @Override
@@ -67,7 +65,6 @@ public class CurrencyServiceImpl implements CurrencyService {
         currentRates = client.getCurrentRates(appId);
         String dateString = getDateStringForRatesRequest();
         yesterdaysRates = client.getRatesHistory(dateString, appId);
-        ratesRefreshTS = System.currentTimeMillis();
     }
 
     private String getDateStringForRatesRequest() {
@@ -80,6 +77,6 @@ public class CurrencyServiceImpl implements CurrencyService {
     private boolean isRatesRefreshNeeded() {
         if (currentRates == null || yesterdaysRates == null) return true;
         long oneHourInMillis = 3600 * 1000;
-        return System.currentTimeMillis() - ratesRefreshTS >= oneHourInMillis;
+        return System.currentTimeMillis() - currentRates.getTimestamp() * 1000L >= oneHourInMillis;
     }
 }

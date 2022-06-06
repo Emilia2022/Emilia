@@ -19,18 +19,18 @@ import java.util.Map;
  */
 public class CurrencyRates {
 
-    private Integer timestamp;
+    private Long timestamp;
     private String base;
     private Map<String, Double> rates;
 
     public CurrencyRates() {
     }
 
-    public Integer getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Integer timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 

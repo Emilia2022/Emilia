@@ -22,12 +22,17 @@ public class AppConfig {
     }
 
     @Bean(SEARCH_QUERY_PROVIDER)
-    public SearchQueryProvider searchQueryProvider(CurrencyService currencyService){
-        return new SearchQueryProvider(currencyService);
+    public SearchQueryProvider searchQueryProvider(
+            CurrencyService currencyService,
+            @Value("${giphy.broke}") String broke,
+            @Value("${giphy.rich}") String rich,
+            @Value("${giphy.uncertain}") String uncertain
+    ) {
+        return new SearchQueryProvider(currencyService, broke, rich, uncertain);
     }
 
     @Bean(CURRENCY_CALCULATOR)
-    public CurrencyCalculator currencyCalculator(@Value("${oxr.base}") String baseTicker){
+    public CurrencyCalculator currencyCalculator(@Value("${oxr.base}") String baseTicker) {
         return new CurrencyCalculator(baseTicker);
     }
 

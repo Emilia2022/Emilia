@@ -2,21 +2,23 @@ package emilia.gifs;
 
 import emilia.currency.RateChange;
 import emilia.currency.services.CurrencyService;
-import org.springframework.beans.factory.annotation.Value;
 
 public class SearchQueryProvider {
 
     private final CurrencyService currencyService;
+    private final String broke;
+    private final String rich;
+    private final String uncertain;
 
-    @Value("${giphy.broke}")
-    private String broke;
-    @Value("${giphy.rich}")
-    private String rich;
-    @Value("${giphy.uncertain}")
-    private String uncertain;
-
-    public SearchQueryProvider(CurrencyService currencyService) {
+    public SearchQueryProvider(
+            CurrencyService currencyService,
+            String broke,
+            String rich,
+            String uncertain) {
         this.currencyService = currencyService;
+        this.broke = broke;
+        this.rich = rich;
+        this.uncertain = uncertain;
     }
 
     public String get(String ticker) {
