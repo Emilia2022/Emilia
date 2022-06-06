@@ -6,11 +6,16 @@ plugins {
 }
 
 group 'ruble2gif'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+}
+
+jar {
+    archivesBaseName = 'Ruble2Gif'
+    archiveVersion = 'version'
 }
 
 repositories {
