@@ -18,7 +18,7 @@ function getTickers() {
 }
 
 let cachedGifs = [];
-var offset = 0;
+let offset = 0;
 
 function getGif(ticker) {
     $.ajax({

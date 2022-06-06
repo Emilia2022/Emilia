@@ -1,16 +1,17 @@
 package emilia.currency;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class CurrencyCalculator {
 
-    @Value("${oxr.base}")
-    private String baseTicker;
+    private final String baseTicker;
 
-    public CurrencyRates recalculateAgainstCustomBase(CurrencyRates original) {
+    public CurrencyCalculator(String baseTicker) {
+        this.baseTicker = baseTicker;
+    }
+
+    CurrencyRates recalculateAgainstCustomBase(CurrencyRates original) {
         Map<String, Double> newRates = new HashMap<>();
         Map<String, Double> rates = original.getRates();
         Double ourBaseRate = rates.get(baseTicker);
@@ -26,6 +27,8 @@ public class CurrencyCalculator {
             String ticker,
             CurrencyRates currentRates,
             CurrencyRates historicalRates) {
+        currentRates = recalculateAgainstCustomBase(currentRates);
+        historicalRates = recalculateAgainstCustomBase(historicalRates);
         Double current = currentRates.getRates().get(ticker);
         Double old = historicalRates.getRates().get(ticker);
         if (current == null || old == null) return RateChange.UNCHANGED;

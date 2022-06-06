@@ -43,10 +43,6 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public void checkRates() {
         refreshRatesIfNeeded();
-        if (yesterdaysRates != null)
-            yesterdaysRates = calculator.recalculateAgainstCustomBase(yesterdaysRates);
-        if (currentRates != null)
-            currentRates = calculator.recalculateAgainstCustomBase(currentRates);
     }
 
     @Override

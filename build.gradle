@@ -23,6 +23,7 @@ dependencies {
     implementation 'org.json:json:20220320'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'junit:junit:4.13.2'
+    testImplementation("org.assertj:assertj-core:3.23.1")
 }
 
 test {

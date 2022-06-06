@@ -8,14 +8,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class GifServiceImpl implements GifService {
 
-    @Value("${giphy.api.key}")
-    private String apiKey;
-
+    private final String apiKey;
     private final GiphyClient giphyClient;
 
     @Autowired
-    public GifServiceImpl(GiphyClient giphyClient) {
+    public GifServiceImpl(
+            GiphyClient giphyClient,
+            @Value("${giphy.api.key}") String apiKey) {
         this.giphyClient = giphyClient;
+        this.apiKey = apiKey;
     }
 
     @Override

@@ -3,6 +3,7 @@ package emilia.di;
 import emilia.gifs.SearchQueryProvider;
 import emilia.currency.CurrencyCalculator;
 import emilia.currency.services.CurrencyService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,8 +27,8 @@ public class AppConfig {
     }
 
     @Bean(CURRENCY_CALCULATOR)
-    public CurrencyCalculator currencyCalculator(){
-        return new CurrencyCalculator();
+    public CurrencyCalculator currencyCalculator(@Value("${oxr.base}") String baseTicker){
+        return new CurrencyCalculator(baseTicker);
     }
 
 }
